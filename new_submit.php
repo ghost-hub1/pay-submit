@@ -77,7 +77,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     } else {
         logToFile("❌ Unrecognized domain: $domain", $log_file);
-        exit("Unauthorized domain");
+        echo "Unauthorized domain: " . $_SERVER['HTTP_HOST'];
+        exit;
     }
 }
 ?>
