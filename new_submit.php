@@ -4,7 +4,6 @@
 // ✅ Using HTTP_REFERER to detect form source domain
 // =========================================
 
-include 'firewall.php';
 
 // === Configuration: Replace with real domains ===
 $site_map = [
